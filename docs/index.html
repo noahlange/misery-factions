@@ -7,17 +7,8 @@
     <title>faction skirmish resolver</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <style type="text/css">
-      body, #app {
-        height: 100vh;
-      }
-      body {
-        background-image: url('header.jpg');
-        background-position: top center;
-        background-size: contain;
-        background-repeat: no-repeat;
-      }
-    </style>
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata|Special+Elite" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div id="app" class="d-flex flex-column justify-content-between">
@@ -29,14 +20,14 @@
               <b-button
                 class="float-right ml-2"
                 v-on:click="resolve(results, factions, true)"
-                :variant="'outline-danger'"
+                variant="outline-danger"
               >
                 fight quickly!
               </b-button>
               <b-button
                 class="float-right"
                 v-on:click="resolve(results, factions, false)"
-                :variant="'danger'"
+                variant="danger"
               >
                 fight accurately!
               </b-button>
@@ -54,15 +45,16 @@
             <div v-for="faction in factions" :key="faction.name">
               <b-card no-body class="mb-2">
                 <b-card-header>
-                  <h3 class="d-flex mb-0 justify-content-between">
+                  <h3 class="d-flex mt-2 justify-content-between">
                     <span v-if="faction.edit">
                       <b-form-select
                         v-model="faction.name"
                         v-on:change="updateFaction(faction, $event)"
                         :options="all_factions"
+                        class="form-control-lg"
                       />
                     </span>
-                    <span v-if="!faction.edit">
+                    <span class="faction-name" v-if="!faction.edit">
                       {{ faction.name }}
                     </span>
                     <b-button
@@ -102,7 +94,23 @@
                       class="d-flex justify-content-between align-items-center"
                     >
                       {{ squad.title }}
-                      <b-badge variant="primary" pill>{{ squad.rp }} RP</b-badge>
+                      <b-badge :id="'squad-info-' + squad.uid"variant="secondary" pill>
+                        <i class="fa fa-info"></i>
+                      </b-badge>
+                      <b-popover triggers="hover" :target="'squad-info-' + squad.uid">
+                        <template slot="title">
+                          <div class="pt-2">
+                            {{ squad.title }} ({{ squad.rp }} RP)
+                            <img class="faction-patch" :src="'images/' + squad.faction + '.png'">
+                          </div>
+                        </template>
+                        <p class="mb-1">
+                          <strong>{{ squad.faction }}</strong>: {{ squad.faction_description }}
+                        </p>
+                        <p class="mb-1">
+                          <strong>{{ squad.rank }}</strong>: {{ squad.rank_description }}
+                        </p>
+                      </b-popover>
                     </b-list-group-item>
                   </b-list-group>
                 </b-card-body>

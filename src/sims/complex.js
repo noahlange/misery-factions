@@ -8,17 +8,16 @@ export default (rand, squads, n) => {
   const s = shuffle(squads.slice());
   let turn = 0;
   let skipped = 0;
-  let logs = [];
+  let log = [];
 
   // while we don't have a victor...
-  // (or while the sim hasn't gone on too long)
   turns: while (!victorExists(s)) {
     // pluck the current squad and...
     const curr = s[turn % s.length];
     turn++;
     if (!curr.defeated) {
       // run a turn if the squad is still kicking
-      logs.push(takeTurn(
+      log.push(takeTurn(
         rand,
         curr,
         s.filter(f => f !== curr),
@@ -32,7 +31,7 @@ export default (rand, squads, n) => {
   }
   
   const victor = s.find(t => !t.defeated).faction;
-  logs.push([ '== RESULTS ==', title(victor) + ' are victorious!' ]);
+  log.push([ '== RESULTS ==', title(victor) + ' are victorious!' ]);
 
   const postmatch = [];
 
@@ -47,10 +46,6 @@ export default (rand, squads, n) => {
     squad.reset();
   }
 
-  logs.push(postmatch);
-  // find the winner
-  return {
-    victor,
-    log: logs
-  };
+  log.push(postmatch);
+  return { victor, log };
 }

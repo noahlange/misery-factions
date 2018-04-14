@@ -17,41 +17,39 @@ export default (rand, squad, others, turn, verbose) => {
 
   squad.target = enemies
     .slice()
-    // attack healthiest units first
-    .sort((a, b) => b.rp - a.rp)
-    // first
-    .find(i => true);
+    // attack strongest units first
+    .sort((a, b) => b.rp - a.rp)[0];
 
   if (!squad.target) return;
 
   // attack!
   let attack = roll10() + squad.attr_dex + squad.skill_force;
-  log(`- ${squad.title} rolls for attack! - ${attack}`);
+  log(`- ${squad.title} roll for attack! - ${attack}`);
 
   // defend!
   const defense = roll10() + squad.target.attr_agi + squad.target.skill_evade;
-  log(`- ${squad.target.title} rolls for defense! - ${defense}`);
+  log(`- ${squad.target.title} roll for defense! - ${defense}`);
 
   const hits = [];
 
   if (attack > defense) {
     while (attack > defense) {
       hits.push(roll(rand, squad.damage)());
-      attack -= squad.spread;
+      attack -= squad.success;
     }
-    log(`- ${squad.title} hits ${squad.target.title} x${hits.length}!`);
+    log(`- ${squad.title} hit ${squad.target.title} x${hits.length}!`);
   } else {
-    log(`- ${ squad.title } missed ${ squad.target.title}!`);
+    log(`- ${ squad.title } miss ${ squad.target.title}!`);
   }
 
   while (hits.length) {
     const hit = hits.pop();
     const dam = Math.max(hit - squad.target.resist_force, 0);
     if (dam > 0) {
-      log(` - ${ squad.target.title } takes ${ dam } damage!`);
+      log(` - ${ squad.target.title } take ${ dam } damage!`);
       squad.target.hit.force(dam);
     } else {
-      log(` - ${squad.target.title } resists ${ hit } damage!`);
+      log(` - ${squad.target.title } resist ${ hit } damage!`);
     }
     if (squad.target.defeated) {
       break;
@@ -59,15 +57,19 @@ export default (rand, squad, others, turn, verbose) => {
   }
 
   if (squad.target.defeated) {
-    log(`  - ${squad.target.title} has been defeated!`);
+    log(` - ${squad.target.title} have been defeated!`);
+    const hit = roll(rand, squad.target.damage)();
     for (const enemy of enemies) {
-      const hit = roll(rand, enemy.damage)();
       if (!enemy.defeated) {
         const dam = Math.max(hit - enemy.resist_morale, 0);
-        log(`   - ${ enemy.title } takes ${ dam } Morale damage!`);
+        if (dam > 0) {
+          log(`   - ${ enemy.title } take ${ dam } Morale damage!`);
+        } else {
+          log(`   - ${ enemy.title } resist ${ hit } Morale damage!`);
+        }
         enemy.hit.morale(dam);
         if (enemy.defeated) {
-          log(`    - ${enemy.title} has fled!`);
+          log(`    - ${enemy.title} have fled!`);
         }
       }
     }

@@ -1,4 +1,5 @@
 import { title } from 'change-case';
+import { generate } from 'shortid';
 
 export default class Squad {
   reset() {
@@ -32,10 +33,11 @@ export default class Squad {
   }
 
   get title() {
-    return this.name || title(`${this.faction} ${this.rank}`);
+    return this.name || title(`${this.rank} ${this.faction}`);
   }
 
   constructor(config) {
+    this.uid = generate();
     this.hits = [];
     this.hit = {
       force: damage => {

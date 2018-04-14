@@ -7,8 +7,9 @@ import {
   Card,
   FormInput,
   FormSelect,
+  InputGroup,
   ListGroup,
-  InputGroup
+  Popover
 } from 'bootstrap-vue/es/components';
 
 import random from 'random-seed';
@@ -16,14 +17,14 @@ import Squad from './lib/Squad';
 import { FACTIONS, RANKS } from './config';
 import { complex, simple } from './sims';
 
-Vue
-  .use(Button)
+Vue.use(Button)
   .use(Card)
   .use(ListGroup)
   .use(Badge)
   .use(FormInput)
   .use(FormSelect)
-  .use(InputGroup);
+  .use(InputGroup)
+  .use(Popover);
 
 const rand = random.create('misery');
 
