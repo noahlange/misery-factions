@@ -5,10 +5,9 @@ import DrollResult from './DrollResult';
  * Parse the formula into its component pieces.
  * Returns a DrollFormula object on success or null on failure.
  */
-export function parse(formula) {
-  let pieces = null;
+export function parse(formula: string) {
   const result = new DrollFormula();
-  pieces = formula.match(/^([1-9]\d*)?d([1-9]\d*)([+-]\d+)?$/i);
+  const pieces = formula.match(/^([1-9]\d*)?d([1-9]\d*)([+-]\d+)?$/i) as any;
   if (!pieces) {
     return pieces;
   }
@@ -24,14 +23,14 @@ export function parse(formula) {
  * Test the validity of the formula.
  * Returns true on success or false on failure.
  */
-export function validate(formula) {
+export function validate(formula: string) {
   return !!parse(formula);
 };
 /**
  * Roll the dice defined by the formula.
  * Returns a DrollResult object on success or false on failure.
  */
-export function roll(rand, formula) {
+export function roll(rand: any, formula: string) {
   let pieces = null;
   const result = new DrollResult();
   pieces = parse(formula);

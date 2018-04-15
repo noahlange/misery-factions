@@ -1,4 +1,11 @@
+import DrollFormula from './DrollFormula';
+
 export default class DrollResult {
+
+  public modifier: number;
+  public total: number;
+  public rolls: any[];
+
   toString() {
     if (this.rolls.length === 1 && this.modifier === 0) {
       return this.rolls[0] + '';
